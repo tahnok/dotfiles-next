@@ -1,0 +1,31 @@
+export ZSH="/home/wellis/.oh-my-zsh"
+
+ZSH_THEME="tahnok4"
+
+plugins=(zsh-syntax-highlighting virtualenv)
+
+source $ZSH/oh-my-zsh.sh
+
+
+#pipenv or python?
+#export PATH="$HOME/.local/bin:$PATH"
+
+#pyenv 
+export PATH="/home/wellis/.pyenv/bin:$PATH"
+eval "$(pyenv init --no-rehash - zsh)"
+eval "$(pyenv virtualenv-init -)"
+
+alias pbcopy="xclip -sel clip"
+alias g="git"
+alias gg="git grep"
+alias first-push='git push -u origin $(git_current_branch)'
+alias vpn="sudo openvpn --config /etc/openvpn/client/ghgsat.conf"
+
+# make less exit if less than 1 page
+export LESS="-FRSX"
+
+# ruby
+# source /usr/local/share/chruby/chruby.sh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND="rg --files --hidden"
