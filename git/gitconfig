@@ -1,0 +1,32 @@
+[user]
+	name = Wesley Ellis
+	email = wellis@ghgsat.com
+[core]
+	excludesfile = /home/wellis/.gitignore
+	ui = on
+[alias]
+	co = checkout
+	st = status
+	dc = diff --cached
+	d = diff
+	cm = checkout master
+	p = pull
+	cb = checkout -b
+	wip = !git add --all && git commit -m \"WIP\"
+	b = branch
+	undo = reset HEAD~
+	rh = reset --hard HEAD
+	oops = !git add --all && git commit --amend --reuse-message=HEAD
+	c = commit -m
+	aa = add --all
+[rebase]
+	autosquash = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[credential]
+	helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+[merge]
+	conflictstyle = diff3
