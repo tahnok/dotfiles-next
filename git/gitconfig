@@ -1,8 +1,9 @@
 [user]
 	name = Wesley Ellis
-	email = wellis@ghgsat.com
+	email = wellis@benchsci.com
+	signingkey = 35FC6016CC4DF0BC
 [core]
-	excludesfile = /home/wellis/.gitignore
+	excludesfile = /Users/wellis/.gitignore
 	ui = on
 [alias]
 	co = checkout
@@ -26,7 +27,7 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-[credential]
-	helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 [merge]
 	conflictstyle = diff3
+[pull]
+	ff = only
