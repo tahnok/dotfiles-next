@@ -13,13 +13,14 @@
 	cm = checkout master
 	p = pull
 	cb = checkout -b
-	wip = !git add --all && git commit -m \"WIP\"
+	wip = !git add --all && git commit -m \"WIP\" --no-verify
 	b = branch
 	undo = reset HEAD~
 	rh = reset --hard HEAD
 	oops = !git add --all && git commit --amend --reuse-message=HEAD
 	c = commit -m
 	aa = add --all
+    fp = push --force-with-lease
 [rebase]
 	autosquash = true
 [filter "lfs"]
