@@ -40,5 +40,11 @@ set expandtab
 " map Ctrl p to :Files from fzf.vim
 nnoremap <C-p> :Files<CR>
 
+" %% to folder containing current file at command
+cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+
 "Try making things update fast?
 set updatetime=300
+
+"CoC things
+nmap <silent> gd <Plug>(coc-definition)
