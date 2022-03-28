@@ -5,6 +5,13 @@
 [core]
 	excludesfile = /Users/wellis/.gitignore
 	ui = on
+    pager = delta # delta
+[interactive] # delta
+    diffFilter = delta --color-only
+[delta]
+    navigate = true
+[diff]
+    colorMoved = default
 [alias]
 	co = checkout
 	st = status
@@ -32,3 +39,5 @@
 	conflictstyle = diff3
 [pull]
 	ff = only
+[init]
+	defaultBranch = main
