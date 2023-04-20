@@ -1,3 +1,5 @@
 .vscode/
 .pycache/
 *.pyc
+user.bazelrc
+.vim/

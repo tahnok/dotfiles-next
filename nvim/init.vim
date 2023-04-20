@@ -2,7 +2,8 @@ call plug#begin(stdpath('data') . '/plugged')
 
 "Git stuff
 Plug 'tpope/vim-fugitive' 
-Plug 'airblade/vim-gitgutter'
+Plug 'lewis6991/gitsigns.nvim'
+"Plug 'airblade/vim-gitgutter'
 "Github vim extension
 Plug 'tpope/vim-rhubarb'
 
@@ -22,6 +23,10 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend upda
 Plug 'p00f/nvim-ts-rainbow'
 
 Plug 'tanvirtin/monokai.nvim'
+
+Plug 'gpanders/editorconfig.nvim'
+
+Plug 'tamton-aquib/duck.nvim'
 
 call plug#end()
 
@@ -79,17 +84,41 @@ set updatetime=300
 
 "CoC things
 nmap <silent> gd <Plug>(coc-definition)
-" Use tab for trigger completion with characters ahead and navigate.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-function! s:check_back_space() abort
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice.
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
 
 "Tree sitter things
 lua <<EOF
@@ -115,6 +144,13 @@ require'nvim-treesitter.configs'.setup {
     -- termcolors = {} -- table of colour name strings
   }
 }
+
+vim.keymap.set('n', '<leader>dd', function() require("duck").hatch() end, {})
+vim.keymap.set('n', '<leader>dk', function() require("duck").cook() end, {})
 EOF
 
 nnoremap <leader>gb :Git blame<CR>
+
+lua <<EOF
+require('gitsigns').setup()
+EOF

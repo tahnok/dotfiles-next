@@ -17,7 +17,7 @@
 	st = status
 	dc = diff --cached
 	d = diff
-	cm = checkout master
+	cm = checkout main
 	p = pull
 	cb = checkout -b
 	wip = !git add --all && git commit -m \"WIP\" --no-verify
@@ -41,3 +41,7 @@
 	ff = only
 [init]
 	defaultBranch = main
+[branch]
+	autoSetupMerge = simple
+[push]
+	autoSetupRemote = true

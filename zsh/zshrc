@@ -15,7 +15,7 @@ eval "$(pyenv virtualenv-init -)"
 
 alias g="git"
 alias c="code ."
-alias first-push='git push -u origin $(git_current_branch)'
+#alias first-push='git push -u origin $(git_current_branch)'
 alias vim="nvim"
 
 # make less exit if less than 1 page
@@ -26,8 +26,8 @@ export LESS="-FRSX"
 export FZF_DEFAULT_COMMAND="rg --files --hidden"
 
 # nvm / node
-#export NVM_DIR="$HOME/.nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 # gcloud
 source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
@@ -47,3 +47,7 @@ function noti() {
 	MSG="${1:=something done}"
 	osascript -e "display notification \"${MSG}\" with title \"${TITLE}\""
 }
+
+alias mv="mv -iv"
+alias cp="cp -iv"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
