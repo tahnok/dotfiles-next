@@ -28,11 +28,10 @@ Plug 'gpanders/editorconfig.nvim'
 
 Plug 'tamton-aquib/duck.nvim'
 
+Plug 'github/copilot.vim'
+
 call plug#end()
 
-"disable icons for barbar
-let bufferline = get(g:, 'bufferline', {})
-let bufferline.icons = v:false
 " Move to previous/next
 nnoremap <silent>    <A-,> :BufferPrevious<CR>
 nnoremap <silent>    <A-.> :BufferNext<CR>
@@ -152,5 +151,20 @@ EOF
 nnoremap <leader>gb :Git blame<CR>
 
 lua <<EOF
+
 require('gitsigns').setup()
+
+vim.filetype.add({
+  extension = {
+    tf = 'hcl',
+    tfvars = 'hcl',
+  }
+  })
+
+require'barbar'.setup {
+  auto_hide = 1,
+  icons = {
+      button = 'x',
+      filetype = {enabled = false}},
+}
 EOF

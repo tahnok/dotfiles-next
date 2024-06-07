@@ -1,11 +1,11 @@
 [user]
 	name = Wesley Ellis
 	email = wellis@benchsci.com
-	signingkey = 35FC6016CC4DF0BC
 [core]
 	excludesfile = /Users/wellis/.gitignore
 	ui = on
     pager = delta # delta
+	fsmonitor = true
 [interactive] # delta
     diffFilter = delta --color-only
 [delta]
