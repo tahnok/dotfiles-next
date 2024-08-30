@@ -4,14 +4,14 @@
 [core]
 	excludesfile = /Users/wellis/.gitignore
 	ui = on
-    pager = delta # delta
+	pager = delta # delta
 	fsmonitor = true
 [interactive] # delta
-    diffFilter = delta --color-only
+	diffFilter = delta --color-only
 [delta]
-    navigate = true
+	navigate = true
 [diff]
-    colorMoved = default
+	colorMoved = default
 [alias]
 	co = checkout
 	st = status
@@ -27,7 +27,7 @@
 	oops = !git add --all && git commit --amend --reuse-message=HEAD
 	c = commit -m
 	aa = add --all
-    fp = push --force-with-lease
+	fp = push --force-with-lease
 [rebase]
 	autosquash = true
 [filter "lfs"]
@@ -45,3 +45,5 @@
 	autoSetupMerge = simple
 [push]
 	autoSetupRemote = true
+[commit]
+	verbose = true
