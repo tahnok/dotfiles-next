@@ -5,7 +5,7 @@ Set up vim-plug: https://github.com/junegunn/vim-plug
 
 Create a link
 
-    ln $(realpath nvim/init.vim) "$HOME/.config/nvim/init.vim"
+    ln $(realpath nvim/init.lua) "$HOME/.config/nvim/init.lua"
 
 
 Open nvim and run `:PlugInstall`
