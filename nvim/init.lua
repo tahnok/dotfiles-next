@@ -27,7 +27,7 @@ Plug('github/copilot.vim')
 
 Plug('neovim/nvim-lspconfig')
 
-Plug('psf/black', { ['branch'] = 'stable' })
+Plug('lukas-reineke/indent-blankline.nvim')
 
 vim.call('plug#end')
 
@@ -95,3 +95,5 @@ vim.filetype.add({
 vim.g.python3_host_prog = '/Users/wellis/venvs/neovim/bin/python3.12'
 -- configure black to not use virtualenv
 vim.g.black_use_virtualenv = 0
+
+require("ibl").setup()

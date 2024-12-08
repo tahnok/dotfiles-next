@@ -1,11 +1,11 @@
 [user]
 	name = Wesley Ellis
-	email = wellis@benchsci.com
+	email = tahnok@gmail.com
 [core]
-	excludesfile = /Users/wellis/.gitignore
+	excludesfile = /home/wes/.gitignore
 	ui = on
 	pager = delta # delta
-	fsmonitor = true
+	#fsmonitor = true
 [interactive] # delta
 	diffFilter = delta --color-only
 [delta]
