@@ -59,7 +59,7 @@ require'barbar'.setup {
 }
 
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "python", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = {"python", "vimdoc", "luadoc"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
   ignore_install = {}, -- List of parsers to ignore installing
   highlight = {
@@ -74,6 +74,8 @@ require'nvim-treesitter.configs'.setup {
 }
 
 require'lspconfig'.pyright.setup{}
+-- doesn't seem to do anything
+require'lspconfig'.terraformls.setup{}
 
 vim.cmd("cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'")
 -- cno = command mode
@@ -97,3 +99,19 @@ vim.g.python3_host_prog = '/Users/wellis/venvs/neovim/bin/python3.12'
 vim.g.black_use_virtualenv = 0
 
 require("ibl").setup()
+
+local map = vim.api.nvim_set_keymap
+local opts = { noremap = true, silent = true }
+map('n', '<A-,>', '<Cmd>BufferPrevious<CR>', opts)
+map('n', '<A-.>', '<Cmd>BufferNext<CR>', opts)
+
+map('n', '<A-1>', '<Cmd>BufferGoto 1<CR>', opts)
+map('n', '<A-2>', '<Cmd>BufferGoto 2<CR>', opts)
+map('n', '<A-3>', '<Cmd>BufferGoto 3<CR>', opts)
+map('n', '<A-4>', '<Cmd>BufferGoto 4<CR>', opts)
+map('n', '<A-5>', '<Cmd>BufferGoto 5<CR>', opts)
+map('n', '<A-6>', '<Cmd>BufferGoto 6<CR>', opts)
+map('n', '<A-7>', '<Cmd>BufferGoto 7<CR>', opts)
+map('n', '<A-8>', '<Cmd>BufferGoto 8<CR>', opts)
+map('n', '<A-9>', '<Cmd>BufferGoto 9<CR>', opts)
+map('n', '<A-0>', '<Cmd>BufferLast<CR>', opts)
