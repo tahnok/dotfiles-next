@@ -5,6 +5,7 @@ vim.call('plug#begin')
 
 -- git stuff
 Plug('tpope/vim-fugitive')
+Plug('shumphrey/fugitive-gitlab.vim')
 Plug('lewis6991/gitsigns.nvim')
 Plug('tpope/vim-rhubarb')
 
@@ -18,9 +19,13 @@ Plug('romgrk/barbar.nvim')
 
 Plug('tanvirtin/monokai.nvim')
 
+Plug('tpope/vim-rails')
+
 Plug('nvim-treesitter/nvim-treesitter', { ['do'] = function()
 	vim.cmd('TSUpdate')
 end })
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+Plug 'nvim-treesitter/nvim-treesitter-context'
 --Plug 'p00f/nvim-ts-rainbow'
 
 Plug('github/copilot.vim')
@@ -49,17 +54,18 @@ vim.filetype.add({
     tf = 'hcl',
     tfvars = 'hcl',
   }
-  })
+})
 
 require'barbar'.setup {
   auto_hide = 1,
   icons = {
-      button = 'x',
-      filetype = {enabled = false}},
+    button = 'x',
+    filetype = {enabled = false}
+  },
 }
 
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = {"python", "vimdoc", "luadoc"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = {"python", "vimdoc", "luadoc", "ruby"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
   ignore_install = {}, -- List of parsers to ignore installing
   highlight = {
@@ -70,12 +76,44 @@ require'nvim-treesitter.configs'.setup {
     -- Using this option may slow down your editor, and you may see some duplicate highlights.
     -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
+  },
+
+  -- experimental, let's see how it goes
+  indent = {
+    enable = true
   }
 }
 
-require'lspconfig'.pyright.setup{}
--- doesn't seem to do anything
-require'lspconfig'.terraformls.setup{}
+local lspconfig = require'lspconfig'
+
+lspconfig.pyright.setup{}
+
+lspconfig.ruby_lsp.setup{
+  cmd_env = {
+    -- Ignore bad sorbet config
+    RUBY_LSP_BYPASS_TYPECHECKER = 'true',
+  },
+}
+
+lspconfig.ts_ls.setup{}
+
+-- lspconfig.ts_ls.setup{
+-- init_options = {
+--     plugins = {
+--       {
+--         name = "@vue/typescript-plugin",
+--         location = "/usr/local/lib/node_modules/@vue/typescript-plugin",
+--         languages = {"javascript", "typescript", "vue"},
+--       },
+--     },
+--   },
+--   filetypes = {
+--     "javascript",
+--     "typescript",
+--     "vue",
+--   },
+-- }
+-- 
 
 vim.cmd("cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'")
 -- cno = command mode
@@ -85,18 +123,6 @@ vim.cmd("cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'")
 --vim.keymap.set("cnoremap", "<expr> $$", "expand('%:h').'/'")
 
 
--- configure tf files to use hcl
-vim.filetype.add({
-  extension = {
-    tf = 'hcl',
-    tfvars = 'hcl',
-  }
-})
-
--- tell nvim to use it's own venv with pynvim installed
-vim.g.python3_host_prog = '/Users/wellis/venvs/neovim/bin/python3.12'
--- configure black to not use virtualenv
-vim.g.black_use_virtualenv = 0
 
 require("ibl").setup()
 
@@ -115,3 +141,33 @@ map('n', '<A-7>', '<Cmd>BufferGoto 7<CR>', opts)
 map('n', '<A-8>', '<Cmd>BufferGoto 8<CR>', opts)
 map('n', '<A-9>', '<Cmd>BufferGoto 9<CR>', opts)
 map('n', '<A-0>', '<Cmd>BufferLast<CR>', opts)
+
+
+-- map gF to :Rg <C-R><C-W>
+map('n', 'gF', ':Rg <C-R><C-W><CR>', opts)
+
+-- disable ruby mappings that conflict with ruby-lsp I think, from rando comment.
+vim.g.no_ruby_maps = true
+
+-- set unnamed register to clipboard, yanking/deleting to system clipboard by default
+--vim.cmd("set clipboard+=unnamedplus")
+
+-- enable diagnostics in virtual lines, instead of end of line
+-- vim.diagnostic.config({
+  -- virtual_lines = true
+-- })
+
+
+-- default indent of 2
+vim.o.shiftwidth = 2
+-- use spaces when inserting tabs
+vim.o.expandtab = true
+-- treat tab as 2 spaces
+vim.o.softtabstop = 2
+
+-- this is the number of spaces a <Tab> counts for while performing editing operations
+-- and for what it looks like. Leaveing it ot 8 for now so you can see tabs
+--vim.o.tabstop = 2
+
+-- be smart about indent for c like languages?
+-- vim.o.smartindent = true

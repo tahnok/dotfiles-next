@@ -1,8 +1,8 @@
 [user]
 	name = Wesley Ellis
-	email = tahnok@gmail.com
+	email = wesley@opslevel.com
 [core]
-	excludesfile = /home/wes/.gitignore
+	excludesfile = /Users/wesley/.gitignore
 	ui = on
 	pager = delta # delta
 	#fsmonitor = true
