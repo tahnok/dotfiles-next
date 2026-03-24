@@ -99,36 +99,21 @@ require'nvim-treesitter.configs'.setup {
   }
 }
 
-local lspconfig = require'lspconfig'
 
-lspconfig.pyright.setup{}
-
-lspconfig.ruby_lsp.setup{
+vim.lsp.config('ruby_lsp', {
   cmd_env = {
     -- Ignore bad sorbet config
     RUBY_LSP_BYPASS_TYPECHECKER = 'true',
   },
-}
-
-lspconfig.ts_ls.setup{}
-
--- lspconfig.ts_ls.setup{
--- init_options = {
---     plugins = {
---       {
---         name = "@vue/typescript-plugin",
---         location = "/usr/local/lib/node_modules/@vue/typescript-plugin",
---         languages = {"javascript", "typescript", "vue"},
---       },
---     },
---   },
---   filetypes = {
---     "javascript",
---     "typescript",
---     "vue",
---   },
--- }
--- 
+  init_options = {
+    addonSettings = {
+      ["Ruby LSP Rails"] = {
+        enablePendingMigrationsPrompt = false,
+      },
+    },
+  },
+})
+vim.lsp.enable('ruby_lsp')
 
 vim.cmd("cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'")
 -- cno = command mode
