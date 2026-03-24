@@ -93,9 +93,9 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
 
-  -- experimental, let's see how it goes
+  -- doesn't work good for ruby https://github.com/nvim-treesitter/nvim-treesitter/issues/3363
   indent = {
-    enable = true
+    enable = false
   }
 }
 
