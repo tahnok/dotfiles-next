@@ -9,10 +9,13 @@ Plug('shumphrey/fugitive-gitlab.vim')
 Plug('lewis6991/gitsigns.nvim')
 Plug('tpope/vim-rhubarb')
 
-Plug('junegunn/fzf', { ['do'] = function()
-  vim.fn['fzf#install']()
-end })
-Plug('junegunn/fzf.vim')
+--Plug('junegunn/fzf', { ['do'] = function()
+--  vim.fn['fzf#install']()
+--end })
+--Plug('junegunn/fzf.vim')
+
+Plug('nvim-lua/plenary.nvim')
+Plug('nvim-telescope/telescope.nvim', { ['branch'] = '0.1.x'})
 
 Plug('scrooloose/nerdtree')
 Plug('romgrk/barbar.nvim')
@@ -45,9 +48,17 @@ vim.cmd("colorscheme monokai_soda")
 
 require('gitsigns').setup()
 
-vim.env.FZF_DEFAULT_COMMAND = 'rg --files --hidden'
-vim.keymap.set("n", "<C-p>", ":Files<CR>")
-vim.keymap.set("n", "<C-l>", ":Buffers<CR>")
+--vim.env.FZF_DEFAULT_COMMAND = 'rg --files --hidden'
+--vim.keymap.set("n", "<C-p>", ":Files<CR>")
+--vim.keymap.set("n", "<C-l>", ":Buffers<CR>")
+
+local builtin = require('telescope.builtin')
+vim.keymap.set("n", "<C-p>", builtin.find_files, { desc = 'Telescope find files' })
+vim.keymap.set("n", "<C-l>", builtin.grep_string, { desc = 'Telescope grep string under cursor' })
+
+-- add alias for :Rg to Telescope live_grep
+vim.cmd("command! -nargs=* Rg lua require('telescope.builtin').live_grep({ search = <q-args> })")
+
 
 vim.filetype.add({
   extension = {
