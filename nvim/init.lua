@@ -25,9 +25,13 @@ Plug('EdenEast/nightfox.nvim')
 
 Plug('tpope/vim-rails')
 
-Plug('nvim-treesitter/nvim-treesitter', { ['do'] = function()
-	vim.cmd('TSUpdate')
-end })
+Plug('nvim-treesitter/nvim-treesitter', {
+	['do'] = function()
+		vim.cmd('TSUpdate')
+	end,
+        -- pin to master for neovim 0.11, change to main after upgrade
+	['branch'] = 'master'
+})
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'nvim-treesitter/nvim-treesitter-context'
 --Plug 'p00f/nvim-ts-rainbow'
@@ -76,7 +80,7 @@ require'barbar'.setup {
 }
 
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = {"python", "vimdoc", "luadoc", "ruby"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = {"python", "vimdoc", "luadoc", "ruby", "go", "graphql"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
   ignore_install = {}, -- List of parsers to ignore installing
   highlight = {
