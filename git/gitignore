@@ -6,3 +6,6 @@ user.bazelrc
 *.swp
 compile_commands.json
 .DS_Store
+.claude
+CLAUDE.local.md
+.rgignore

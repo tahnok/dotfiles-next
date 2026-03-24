@@ -28,6 +28,7 @@
 	c = commit -m
 	aa = add --all
 	fp = push --force-with-lease
+        cleanup-branches = !git branch --merged | grep -v -e ^+\\ .*$ -e ^*\\ .*$ -e main -e master | xargs git branch -d
 [rebase]
 	autosquash = true
 [filter "lfs"]
@@ -47,3 +48,8 @@
 	autoSetupRemote = true
 [commit]
 	verbose = true
+[pager]
+        blame  = delta
+        diff   = delta
+        reflog = delta
+        show   = delta
