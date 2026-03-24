@@ -21,6 +21,7 @@ Plug('scrooloose/nerdtree')
 Plug('romgrk/barbar.nvim')
 
 Plug('tanvirtin/monokai.nvim')
+Plug('EdenEast/nightfox.nvim')
 
 Plug('tpope/vim-rails')
 
@@ -43,8 +44,7 @@ vim.call('plug#end')
 
 vim.wo.number = true
 
-vim.cmd("colorscheme monokai_soda")
-
+vim.cmd("colorscheme nightfox")
 
 require('gitsigns').setup()
 
