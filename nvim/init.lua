@@ -35,8 +35,6 @@ Plug('nvim-treesitter/nvim-treesitter', {
 -- some cool selection thing I totally forgot about
 Plug('nvim-treesitter/nvim-treesitter-textobjects', { ['commit'] = '851e865342e5a4cb1ae23d31caf6e991e1c99f1e' })
 
-Plug('github/copilot.vim', { ['commit'] = 'a12fd5672110c8aa7e3c8419e28c96943ca179be' })
-
 Plug('neovim/nvim-lspconfig', { ['commit'] = '246572944c2a1e2a646c2e7609ff619b0fe74c18' })
 
 -- add visual ident lines, like in vscode
@@ -81,42 +79,31 @@ require'barbar'.setup {
   },
 }
 
-require'nvim-treesitter'.setup {
-  ensure_installed = {"python", "vimdoc", "luadoc", "ruby", "go", "graphql"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
-  ignore_install = {}, -- List of parsers to ignore installing
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    disable = {},  -- list of language that will be disabled
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
+-- treesitter main branch: install parsers (async, skips already installed), highlighting is enabled per filetype
+-- indent is left off, doesn't work good for ruby https://github.com/nvim-treesitter/nvim-treesitter/issues/3363
+require'nvim-treesitter'.install {"python", "vimdoc", "luadoc", "ruby", "go", "graphql"}
 
-  -- doesn't work good for ruby https://github.com/nvim-treesitter/nvim-treesitter/issues/3363
-  indent = {
-    enable = false
-  }
-}
-
-
-vim.lsp.config('ruby_lsp', {
-  cmd_env = {
-    -- Ignore bad sorbet config
-    RUBY_LSP_BYPASS_TYPECHECKER = 'true',
-    DISABLE_SPRING = "1",
-  },
-  init_options = {
-    addonSettings = {
-      ["Ruby LSP Rails"] = {
-        enablePendingMigrationsPrompt = false,
-      },
-    },
-  },
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {"python", "ruby", "go", "graphql"},
+  callback = function() vim.treesitter.start() end,
 })
-vim.lsp.enable('ruby_lsp')
+
+
+--vim.lsp.config('ruby_lsp', {
+--  cmd_env = {
+--    -- Ignore bad sorbet config
+--    RUBY_LSP_BYPASS_TYPECHECKER = 'true',
+--    DISABLE_SPRING = "1",
+--  },
+--  init_options = {
+--    addonSettings = {
+--      ["Ruby LSP Rails"] = {
+--        enablePendingMigrationsPrompt = false,
+--      },
+--    },
+--  },
+--})
+--vim.lsp.enable('ruby_lsp')
 
 -- make %% expand to current file's dir
 vim.cmd("cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'")
