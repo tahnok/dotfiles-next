@@ -1,75 +1,67 @@
-local vim = vim
+-- Plugins are managed by the built-in vim.pack (:h vim.pack). Exact revisions
+-- live in nvim-pack-lock.json next to this file, update with
+-- :lua vim.pack.update(), review the diff, then :write to apply or :quit to bail.
 
--- maybe time to find a new plugini manager? does nvim have one?
-local Plug = vim.fn['plug#']
-
-vim.call('plug#begin')
-
--- git stuff
-Plug('tpope/vim-fugitive', { ['commit'] = '3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0' })
-Plug('shumphrey/fugitive-gitlab.vim', { ['commit'] = '3584cf7e607ba7822f991d407a8d780e05aae287' })
-Plug('lewis6991/gitsigns.nvim', { ['commit'] = 'dd3f588bacbeb041be6facf1742e42097f62165d' })
-Plug('tpope/vim-rhubarb', { ['commit'] = '5496d7c94581c4c9ad7430357449bb57fc59f501' })
-
-Plug('nvim-lua/plenary.nvim', { ['commit'] = '74b06c6c75e4eeb3108ec01852001636d85a932b' })
-Plug('nvim-telescope/telescope.nvim', { ['release'] = '0.2.2', ['commit'] = '7d324792b7943e4aa16ad007212e6acc6f9fe335' })
-
-Plug('scrooloose/nerdtree', { ['commit'] = '690d061b591525890f1471c6675bcb5bdc8cdff9' })
-Plug('romgrk/barbar.nvim', { ['commit'] = 'a4bef5b4fc1f064f2f673172252028eae18191c9' })
-
---Plug('tanvirtin/monokai.nvim', { ['commit'] = 'b8bd44d5796503173627d7a1fc51f77ec3a08a63' })
---Plug('EdenEast/nightfox.nvim', { ['commit'] = '26b61b1f856ec37cae3cb64f5690adb955f246a1' })
---Plug('f4z3r/gruvbox-material.nvim', { ['commit'] = 'ee006c962780358b8f03eaa918a3139b7c6f0d81' })
-Plug('miikanissi/modus-themes.nvim', { ['commit'] = '56233f0986ef6c8d0eab97e924e87144e584d970' })
-
--- adds :A for switching between rails file and test
-Plug('tpope/vim-rails', { ['commit'] = 'b0a5c76f86ea214ade36ab0b811e730c3f0add67' })
-
-Plug('nvim-treesitter/nvim-treesitter', {
-	['do'] = function()
-		vim.cmd('TSUpdate')
-	end,
-	['branch'] = 'main',
-	['commit'] = '4916d6592ede8c07973490d9322f187e07dfefac'
+-- must be registered before vim.pack.add() so it also fires on install
+vim.api.nvim_create_autocmd('PackChanged', {
+  callback = function(ev)
+    local name, kind = ev.data.spec.name, ev.data.kind
+    if name == 'nvim-treesitter' and kind == 'update' then
+      if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
+      vim.cmd('TSUpdate')
+    end
+  end,
 })
--- some cool selection thing I totally forgot about
-Plug('nvim-treesitter/nvim-treesitter-textobjects', { ['commit'] = '851e865342e5a4cb1ae23d31caf6e991e1c99f1e' })
 
-Plug('neovim/nvim-lspconfig', { ['commit'] = '246572944c2a1e2a646c2e7609ff619b0fe74c18' })
+local gh = function(repo) return 'https://github.com/' .. repo end
 
--- add visual ident lines, like in vscode
-Plug('lukas-reineke/indent-blankline.nvim', { ['commit'] = 'd28a3f70721c79e3c5f6693057ae929f3d9c0a03' })
+vim.pack.add({
+  -- git stuff
+  gh('tpope/vim-fugitive'),
+  gh('shumphrey/fugitive-gitlab.vim'),
+  gh('lewis6991/gitsigns.nvim'),
+  gh('tpope/vim-rhubarb'),
 
-vim.call('plug#end')
+  gh('nvim-lua/plenary.nvim'),
+  gh('nvim-telescope/telescope.nvim'),
+
+  gh('preservim/nerdtree'),
+  gh('romgrk/barbar.nvim'),
+
+  gh('miikanissi/modus-themes.nvim'),
+
+  -- adds :A for switching between rails file and test
+  gh('tpope/vim-rails'),
+
+  { src = gh('nvim-treesitter/nvim-treesitter'), version = 'main' },
+
+  gh('neovim/nvim-lspconfig'),
+
+  -- add visual ident lines, like in vscode
+  gh('lukas-reineke/indent-blankline.nvim'),
+})
 
 ---------------------------
 
 vim.cmd([[colorscheme modus]]) -- modus_operandi, modus_vivendi
 
 vim.wo.number = true
-
---require('gruvbox-material').setup({
---  contrast = 'hard',
---  italics = true,
---})
---vim.cmd.colorscheme('gruvbox-material')
-
-require('gitsigns').setup()
+-- always show the sign column so gitsigns/diagnostics don't shift text sideways
+vim.o.signcolumn = 'yes'
 
 local builtin = require('telescope.builtin')
 vim.keymap.set("n", "<C-p>", builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set("n", "<C-l>", builtin.grep_string, { desc = 'Telescope grep string under cursor' })
 
--- add alias for :Rg to Telescope live_grep
-vim.cmd("command! -nargs=* Rg lua require('telescope.builtin').live_grep({ search = <q-args> })")
+-- :Rg [text] opens Telescope live_grep, prefilled with text
+vim.api.nvim_create_user_command('Rg', function(cmd)
+  builtin.live_grep({ default_text = cmd.args })
+end, { nargs = '*', desc = 'Telescope live_grep' })
 
-
-vim.filetype.add({
-  extension = {
-    tf = 'hcl',
-    tfvars = 'hcl',
-  }
-})
+-- like <C-l> but lands in live_grep so the query can be edited
+vim.keymap.set('n', 'gF', function()
+  builtin.live_grep({ default_text = vim.fn.expand('<cword>') })
+end, { desc = 'Telescope live_grep word under cursor' })
 
 require'barbar'.setup {
   auto_hide = 1,
@@ -78,6 +70,48 @@ require'barbar'.setup {
     filetype = {enabled = false}
   },
 }
+
+vim.keymap.set('n', '<A-,>', '<Cmd>BufferPrevious<CR>')
+vim.keymap.set('n', '<A-.>', '<Cmd>BufferNext<CR>')
+for i = 1, 9 do
+  vim.keymap.set('n', '<A-' .. i .. '>', '<Cmd>BufferGoto ' .. i .. '<CR>')
+end
+vim.keymap.set('n', '<A-0>', '<Cmd>BufferLast<CR>')
+
+---------------------------
+-- git
+
+require('gitsigns').setup {
+  on_attach = function(bufnr)
+    local gitsigns = require('gitsigns')
+    local function map(mode, lhs, rhs, desc)
+      vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+    end
+
+    -- ]c / [c jump between hunks (falls back to the builtin in diff mode)
+    map('n', ']c', function()
+      if vim.wo.diff then vim.cmd.normal({ ']c', bang = true }) else gitsigns.nav_hunk('next') end
+    end, 'Next hunk')
+    map('n', '[c', function()
+      if vim.wo.diff then vim.cmd.normal({ '[c', bang = true }) else gitsigns.nav_hunk('prev') end
+    end, 'Previous hunk')
+
+    -- gh* = "git hunk"
+    map('n', 'ghs', gitsigns.stage_hunk, 'Stage/unstage hunk')
+    map('n', 'ghr', gitsigns.reset_hunk, 'Reset hunk')
+    map('x', 'ghs', function() gitsigns.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end, 'Stage lines')
+    map('x', 'ghr', function() gitsigns.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') }) end, 'Reset lines')
+    map('n', 'ghp', gitsigns.preview_hunk_inline, 'Preview hunk inline')
+    map('n', 'ghb', function() gitsigns.blame_line({ full = true }) end, 'Blame line')
+    map('n', 'ghd', gitsigns.diffthis, 'Diff against index')
+
+    -- ih = "inner hunk", e.g. dih deletes the hunk, vih selects it
+    map({ 'o', 'x' }, 'ih', gitsigns.select_hunk, 'Select hunk')
+  end,
+}
+
+---------------------------
+-- treesitter
 
 -- treesitter main branch: install parsers (async, skips already installed), highlighting is enabled per filetype
 -- indent is left off, doesn't work good for ruby https://github.com/nvim-treesitter/nvim-treesitter/issues/3363
@@ -88,6 +122,32 @@ vim.api.nvim_create_autocmd('FileType', {
   callback = function() vim.treesitter.start() end,
 })
 
+-- disable ruby mappings that conflict with ruby-lsp I think, from rando comment.
+vim.g.no_ruby_maps = true
+
+---------------------------
+-- completion
+
+-- built-in autocomplete: popup as you type, from words in open buffers.
+-- <C-n>/<C-p> to move, <C-y> to accept, <C-e> to dismiss
+vim.o.autocomplete = true
+vim.o.complete = '.^5,w^5,b^5,u^5'
+vim.o.completeopt = 'menuone,noselect,fuzzy,popup'
+
+-- once a language server attaches, add it as the first autocomplete source.
+-- completion.enable() makes <C-y> apply extras like auto-imports and snippets.
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client and client:supports_method('textDocument/completion') then
+      vim.lsp.completion.enable(true, client.id, ev.buf)
+      vim.bo[ev.buf].complete = 'o,' .. vim.o.complete
+    end
+  end,
+})
+
+---------------------------
+-- lsp
 
 --vim.lsp.config('ruby_lsp', {
 --  cmd_env = {
@@ -105,45 +165,23 @@ vim.api.nvim_create_autocmd('FileType', {
 --})
 --vim.lsp.enable('ruby_lsp')
 
+vim.diagnostic.config({
+  virtual_text = true,
+  -- show diagnostics on their own lines below the code instead
+  -- virtual_lines = true
+})
+
+---------------------------
+-- misc
+
 -- make %% expand to current file's dir
 vim.cmd("cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'")
-
 
 -- indent blankline
 require("ibl").setup()
 
-local map = vim.api.nvim_set_keymap
-local opts = { noremap = true, silent = true }
-map('n', '<A-,>', '<Cmd>BufferPrevious<CR>', opts)
-map('n', '<A-.>', '<Cmd>BufferNext<CR>', opts)
-
-map('n', '<A-1>', '<Cmd>BufferGoto 1<CR>', opts)
-map('n', '<A-2>', '<Cmd>BufferGoto 2<CR>', opts)
-map('n', '<A-3>', '<Cmd>BufferGoto 3<CR>', opts)
-map('n', '<A-4>', '<Cmd>BufferGoto 4<CR>', opts)
-map('n', '<A-5>', '<Cmd>BufferGoto 5<CR>', opts)
-map('n', '<A-6>', '<Cmd>BufferGoto 6<CR>', opts)
-map('n', '<A-7>', '<Cmd>BufferGoto 7<CR>', opts)
-map('n', '<A-8>', '<Cmd>BufferGoto 8<CR>', opts)
-map('n', '<A-9>', '<Cmd>BufferGoto 9<CR>', opts)
-map('n', '<A-0>', '<Cmd>BufferLast<CR>', opts)
-
-
--- map gF to :Rg <C-R><C-W>
-map('n', 'gF', ':Rg <C-R><C-W><CR>', opts)
-
--- disable ruby mappings that conflict with ruby-lsp I think, from rando comment.
-vim.g.no_ruby_maps = true
-
 -- set unnamed register to clipboard, yanking/deleting to system clipboard by default
 --vim.cmd("set clipboard+=unnamedplus")
-
--- enable diagnostics in virtual lines, instead of end of line
-vim.diagnostic.config({
-  virtual_text = true,
---  virtual_lines = true
-})
-
 
 -- default indent of 2
 vim.o.shiftwidth = 2

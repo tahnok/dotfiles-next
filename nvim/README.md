@@ -1,11 +1,10 @@
-Set up vim-plug: https://github.com/junegunn/vim-plug
+Plugins are managed by the built-in `vim.pack` (Neovim 0.12+), pinned in `nvim-pack-lock.json`.
 
-    h -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+Link the whole directory so the lockfile lives in the repo:
 
-Create a link
+    ln -s "$(realpath nvim)" "$HOME/.config/nvim"
 
-    ln $(realpath nvim/init.lua) "$HOME/.config/nvim/init.lua"
+Start nvim; missing plugins are installed at the lockfile's revisions.
 
-
-Open nvim and run `:PlugInstall`
+Update plugins with `:lua vim.pack.update()`, review, then `:write` to apply
+(or `:quit` to discard). Commit the updated `nvim-pack-lock.json`.
