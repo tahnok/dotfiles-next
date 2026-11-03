@@ -17,4 +17,4 @@ touch ~/.hushlogin  # hide "Last login" message
 
 # brew stuff
 
-`brew install neovim fd ripgrep toilet fnm`
+`brew install neovim fd ripgrep fnm`
